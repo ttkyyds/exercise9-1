@@ -51,13 +51,37 @@ public class AdminPanel {
         System.out.print("Registered? (true/false): ");
         boolean registered = scanner.nextBoolean();
         scanner.nextLine();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        
+        RegisteredUsers user = null;
+        if (registered) {
+            System.out.print("Enter user email: ");
+            String email = scanner.nextLine();
+            user = userService.getUserByEmail(email);
+            
+            if (user == null) {
+                System.out.println("User not found. Creating demo as unregistered user.");
+                registered = false;
+            }
+        }
+        
         System.out.print("Location: ");
         String location = scanner.nextLine();
         
-        rentalService.startRental(registered, email, location, bikeService);
+        if (registered && user != null) {
+            rentalService.startRental(registered, user.getEmailAddress(), location, bikeService, user);
+        } else {
+            System.out.print("Enter email for this demo: ");
+            String demoEmail = scanner.nextLine();
+            rentalService.startRental(false, demoEmail, location, bikeService, null);
+        }
+        
         rentalService.viewActiveRentals();
+        
+        if (registered && user != null) {
+            System.out.print("Enter bike ID to end rental: ");
+            String bikeId = scanner.nextLine();
+            rentalService.endRental(bikeId, bikeService, user);
+        }
     }
 
     private void viewSystemLogs() {

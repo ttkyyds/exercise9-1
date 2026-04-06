@@ -59,9 +59,26 @@ public class UserService {
                           ",Feedback:" + (feedback.isEmpty() ? "NULL" : feedback);
             }
             
-            registeredUsersList.add(new RegisteredUsers(fullName, email, dob, cardNum, 
-                                                       expiry, provider, cvv, type, trips));
+            RegisteredUsers newUser;
+            if (type.equalsIgnoreCase("VIP")) {
+                newUser = new VIPUser(fullName, email, dob, cardNum, expiry, provider, cvv, type, trips);
+            } else {
+                newUser = new RegularUser(fullName, email, dob, cardNum, expiry, provider, cvv, type, trips);
+            }
+            registeredUsersList.add(newUser);
+            
+            System.out.print("User created: ");
+            newUser.displayUserType();
         }
+    }
+    
+    public RegisteredUsers getUserByEmail(String email) {
+        for (RegisteredUsers user : registeredUsersList) {
+            if (user.getEmailAddress().equalsIgnoreCase(email)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     public void viewUsers() {
@@ -70,6 +87,9 @@ public class UserService {
         } else {
             for (RegisteredUsers user : registeredUsersList) {
                 System.out.println(user);
+                user.displayUserType();
+                System.out.println("Calculated fare: $" + user.calculateFare());
+                System.out.println("---");
             }
         }
     }

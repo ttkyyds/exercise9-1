@@ -10,6 +10,8 @@ public class RegisteredUsers {
     private int cvv;
     private String userType;
     private String[] lastThreeTrips = new String[3];
+    
+    public static final double BASE_FARE = 3.0;
 
     public RegisteredUsers(String fullName, String emailAddress, String dateOfBirth,
                            long cardNumber, String cardExpiryDate, String cardProvider,
@@ -28,6 +30,14 @@ public class RegisteredUsers {
                 this.lastThreeTrips[i] = lastThreeTrips[i];
             }
         }
+    }
+
+    public double calculateFare() {
+        return BASE_FARE;
+    }
+    
+    public void displayUserType() {
+        System.out.println("Regular User");
     }
 
     public String getFullName() {
